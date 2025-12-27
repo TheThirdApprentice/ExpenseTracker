@@ -1,9 +1,9 @@
 // src/screens/DashboardScreen.js
-// Dashboard with analytics and statistics
-// Author: ibtyssam
+// Dashboard with alert system for overspending
+// Author: thethirdapprentice (updated)
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import MonthlyChart from '../components/MonthlyChart';
 import StatsCard from '../components/StatsCard';
 import { getAllExpenses } from '../services/expenseService';
@@ -19,7 +19,7 @@ import {
 
 export default function DashboardScreen() {
   const [expenses, setExpenses] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
+  const [hasShownAlert, setHasShownAlert] = useState(false);
 
   useEffect(() => {
     loadExpenses();
@@ -38,6 +38,17 @@ export default function DashboardScreen() {
   const predictedNext = predictNextMonth(expenses);
   const aboveAverageCheck = isAboveAverage(expenses);
   const { month } = getCurrentMonth();
+
+  // Show alert if above average (only once per session)
+  useEffect(() => {
+    if (aboveAverageCheck.isAbove && !hasShownAlert && currentTotal > 0) {
+      Alert.alert(
+        '⚠️ Spending Alert',
+        `You're ${aboveAverageCheck.percentage.toFixed(0)}% above your average monthly spending!\n\nCurrent: $${currentTotal.toFixed(2)}\nAverage: $${averageSpending.toFixed(2)}`,
+        [{ text: 'OK', onPress: () => setHasShownAlert(true) }]
+      );
+    }
+  }, [aboveAverageCheck.isAbove, currentTotal]);
 
   return (
     <SafeAreaView style={styles.container}>
