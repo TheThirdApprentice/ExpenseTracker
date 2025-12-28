@@ -1,9 +1,10 @@
 // src/screens/HistoryScreen.js
-// History screen with expenses grouped by month
-// Author: thethirdapprentice
+// History screen with auto-refresh when focused
+// Author: thethirdapprentice (fixed)
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, SectionList, StyleSheet, SafeAreaView, RefreshControl } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import ExpenseItem from '../components/ExpenseItem';
 import { deleteExpense } from '../services/expenseService';
 import { getExpenseHistory } from '../services/historyService';
@@ -12,9 +13,12 @@ export default function HistoryScreen() {
   const [sections, setSections] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    loadHistory();
-  }, []);
+  // Reload history when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadHistory();
+    }, [])
+  );
 
   const loadHistory = async () => {
     const history = await getExpenseHistory();
