@@ -1,9 +1,10 @@
 // src/screens/DashboardScreen.js
-// Dashboard with alert system for overspending
-// Author: thethirdapprentice (updated)
+// Dashboard with auto-refresh when tab is focused
+// Author: thethirdapprentice (fixed)
 
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, SafeAreaView, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import MonthlyChart from '../components/MonthlyChart';
 import StatsCard from '../components/StatsCard';
 import { getAllExpenses } from '../services/expenseService';
@@ -21,9 +22,12 @@ export default function DashboardScreen() {
   const [expenses, setExpenses] = useState([]);
   const [hasShownAlert, setHasShownAlert] = useState(false);
 
-  useEffect(() => {
-    loadExpenses();
-  }, []);
+  // Reload expenses when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadExpenses();
+    }, [])
+  );
 
   const loadExpenses = async () => {
     const allExpenses = await getAllExpenses();
