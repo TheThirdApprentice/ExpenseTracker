@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,6 +7,7 @@ import { Text, Platform } from 'react-native';
 import DashboardScreen from '../screens/DashboardScreen';
 import ExpenseScreen from '../screens/ExpenseScreen';
 import HistoryScreen from '../screens/HistoryScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -25,7 +25,7 @@ export default function AppNavigator() {
             height: Platform.OS === 'ios' ? 85 : 70,
           },
           tabBarLabelStyle: {
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: '600',
           },
         }}
@@ -40,7 +40,7 @@ export default function AppNavigator() {
           }}
         />
         <Tab.Screen 
-          name="Add Expense" 
+          name="Add" 
           component={ExpenseScreen}
           options={{
             tabBarIcon: ({ color }) => (
@@ -54,6 +54,15 @@ export default function AppNavigator() {
           options={{
             tabBarIcon: ({ color }) => (
               <Text style={{ fontSize: 24 }}>📅</Text>
+            ),
+          }}
+        />
+        <Tab.Screen 
+          name="Settings" 
+          component={SettingsScreen}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <Text style={{ fontSize: 24 }}>⚙️</Text>
             ),
           }}
         />
