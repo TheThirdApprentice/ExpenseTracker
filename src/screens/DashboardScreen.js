@@ -1,6 +1,6 @@
 // src/screens/DashboardScreen.js
 // Dashboard with auto-refresh when tab is focused
-// Author: thethirdapprentice (fixed)
+// Author: thethirdapprentice 
 
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, SafeAreaView, Alert } from 'react-native';

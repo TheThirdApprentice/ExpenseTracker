@@ -21,4 +21,4 @@ export const initDatabase = async () => {
   }
 };
 
-export default db;import * as SQLite from 'expo-sqlite';
+export default db;

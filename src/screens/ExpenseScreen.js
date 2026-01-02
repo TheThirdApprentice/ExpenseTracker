@@ -28,13 +28,15 @@ export default function ExpenseScreen() {
   // Handle add expense
   const handleAddExpense = async (amount, category, description) => {
     await addExpense(amount, category, description);
-    await loadExpenses(); // Refresh list
+    await loadExpenses(); 
+    // Refresh list
   };
 
   // Handle delete expense
   const handleDeleteExpense = async (id) => {
     await deleteExpense(id);
-    await loadExpenses(); // Refresh list
+    await loadExpenses(); 
+    // Refresh list
   };
 
   // Handle pull to refresh
