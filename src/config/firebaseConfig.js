@@ -1,12 +1,12 @@
-// Import the functions you need from the SDKs you need
+// src/config/firebaseConfig.js
+// Firebase configuration with Authentication
+// Author: ibtyssam (updated for auth)
+
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getDatabase } from 'firebase/database';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth } from 'firebase/auth';
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAIV7wMlpZSHMiG_One8RVUTktN4Z69L_0",
   authDomain: "expensetracker-14d0d.firebaseapp.com",
@@ -20,5 +20,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+// Get database reference
 export const firebaseDB = getDatabase(app);
+
+// Get auth reference
+export const firebaseAuth = getAuth(app);
