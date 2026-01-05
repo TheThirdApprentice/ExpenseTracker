@@ -3,7 +3,8 @@
 // Author: thethirdapprentice (fixed)
 
 import React, { useState } from 'react';
-import { View, Text, SectionList, StyleSheet, SafeAreaView, RefreshControl } from 'react-native';
+import { View, Text, SectionList, StyleSheet, RefreshControl } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import ExpenseItem from '../components/ExpenseItem';
 import { deleteExpense } from '../services/expenseService';
@@ -66,6 +67,7 @@ export default function HistoryScreen() {
           </View>
         }
         contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
         stickySectionHeadersEnabled={true}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -91,7 +93,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 140,
   },
   sectionHeader: {
     backgroundColor: '#4CAF50',

@@ -3,6 +3,7 @@
 import { ref, set, get } from 'firebase/database';
 import { firebaseDB } from '../config/firebaseConfig';
 import { getAllExpenses } from './expenseService';
+import { getCurrentUser } from './authService';
 import db from '../database/database';
 
 /**
@@ -10,6 +11,9 @@ import db from '../database/database';
  */
 export const backupToCloud = async () => {
   try {
+    const user = getCurrentUser();
+    if (!user) throw new Error('Not authenticated');
+    const uid = user.uid;
     // Get all expenses from SQLite
     const expenses = await getAllExpenses();
     
@@ -20,8 +24,8 @@ export const backupToCloud = async () => {
       count: expenses.length
     };
     
-    // Save to Firebase (you can add user ID here for multi-user support)
-    const backupRef = ref(firebaseDB, 'backup/user_default');
+    // Save to Firebase using per-user path
+    const backupRef = ref(firebaseDB, `backup/${uid}`);
     await set(backupRef, backup);
     
     return {
@@ -40,8 +44,11 @@ export const backupToCloud = async () => {
  */
 export const restoreFromCloud = async () => {
   try {
+    const user = getCurrentUser();
+    if (!user) throw new Error('Not authenticated');
+    const uid = user.uid;
     // Get backup from Firebase
-    const backupRef = ref(firebaseDB, 'backup/user_default');
+    const backupRef = ref(firebaseDB, `backup/${uid}`);
     const snapshot = await get(backupRef);
     
     if (!snapshot.exists()) {
@@ -59,14 +66,14 @@ export const restoreFromCloud = async () => {
       };
     }
     
-    // Clear local database
-    await db.execAsync('DELETE FROM expenses');
+    // Clear local expenses for this user only
+    await db.runAsync('DELETE FROM expenses WHERE userId = ?', [uid]);
     
     // Insert all expenses from backup
     for (const expense of cloudExpenses) {
       await db.runAsync(
-        'INSERT INTO expenses (id, amount, category, description, createdAt) VALUES (?, ?, ?, ?, ?)',
-        [expense.id, expense.amount, expense.category, expense.description, expense.createdAt]
+        'INSERT INTO expenses (id, amount, category, description, createdAt, userId) VALUES (?, ?, ?, ?, ?, ?)',
+        [expense.id, expense.amount, expense.category, expense.description, expense.createdAt, uid]
       );
     }
     
@@ -86,7 +93,10 @@ export const restoreFromCloud = async () => {
  */
 export const getLastBackupInfo = async () => {
   try {
-    const backupRef = ref(firebaseDB, 'backup/user_default');
+    const user = getCurrentUser();
+    if (!user) return null;
+    const uid = user.uid;
+    const backupRef = ref(firebaseDB, `backup/${uid}`);
     const snapshot = await get(backupRef);
     
     if (!snapshot.exists()) {
@@ -110,7 +120,10 @@ export const getLastBackupInfo = async () => {
  */
 export const hasCloudBackup = async () => {
   try {
-    const backupRef = ref(firebaseDB, 'backup/user_default');
+    const user = getCurrentUser();
+    if (!user) return false;
+    const uid = user.uid;
+    const backupRef = ref(firebaseDB, `backup/${uid}`);
     const snapshot = await get(backupRef);
     return snapshot.exists();
   } catch (error) {

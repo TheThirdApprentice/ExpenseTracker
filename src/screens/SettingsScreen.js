@@ -3,10 +3,12 @@
 // Author: thethirdapprentice
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { backupToCloud, restoreFromCloud, getLastBackupInfo } from '../services/backupService';
 import { getCurrentUser, logoutUser } from '../services/authService';
+import { clearCurrentUserExpenses } from '../services/expenseService';
 
 export default function SettingsScreen() {
   const [lastBackup, setLastBackup] = useState(null);
@@ -110,13 +112,38 @@ export default function SettingsScreen() {
     );
   };
 
+  const handleResetLocalData = async () => {
+    Alert.alert(
+      'Reset Local Data',
+      'This will delete ALL local expenses for the current account on this device only. Cloud backups are not affected. Continue?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            setLoading(true);
+            try {
+              await clearCurrentUserExpenses();
+              setLoading(false);
+              Alert.alert('Done', 'Local expenses deleted for this account.');
+            } catch (e) {
+              setLoading(false);
+              Alert.alert('Failed', e.message || 'Please try again');
+            }
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>⚙️ Settings</Text>
       </View>
 
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {userInfo && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Account</Text>
@@ -128,6 +155,9 @@ export default function SettingsScreen() {
             )}
             <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
               <Text style={styles.logoutText}>🚪 Logout</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.resetButton} onPress={handleResetLocalData}>
+              <Text style={styles.resetText}>🗑️ Reset Local Data (This User)</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -197,7 +227,7 @@ export default function SettingsScreen() {
             Optional cloud backup keeps your data safe and synced across devices.
           </Text>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -218,6 +248,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
+    paddingBottom: 140,
   },
   section: {
     backgroundColor: 'white',
@@ -299,6 +330,20 @@ const styles = StyleSheet.create({
   logoutText: {
     color: '#f44336',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  resetButton: {
+    marginTop: 10,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#9E9E9E',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  resetText: {
+    color: '#616161',
+    fontSize: 14,
     fontWeight: 'bold',
   },
   aboutText: {

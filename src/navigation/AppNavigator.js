@@ -21,9 +21,10 @@ export default function AppNavigator() {
         tabBarActiveTintColor: '#4CAF50',
         tabBarInactiveTintColor: '#999',
         tabBarStyle: {
-          paddingBottom: Platform.OS === 'ios' ? 20 : 15,
+          paddingBottom: Platform.OS === 'ios' ? 22 : 20,
           paddingTop: 8,
-          height: Platform.OS === 'ios' ? 90 : 80,
+          height: Platform.OS === 'ios' ? 92 : 86,
+          marginBottom: Platform.OS === 'android' ? 8 : 0,
           borderTopWidth: 1,
           borderTopColor: '#e0e0e0',
         },

@@ -3,7 +3,8 @@
 // Author: thethirdapprentice
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ExpenseInput from '../components/ExpenseInput';
 import ExpenseItem from '../components/ExpenseItem';
 import { addExpense, deleteExpense, getAllExpenses } from '../services/expenseService';
@@ -69,6 +70,8 @@ export default function ExpenseScreen() {
         }
         refreshing={refreshing}
         onRefresh={onRefresh}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContent}
       />
     </SafeAreaView>
   );
@@ -112,5 +115,8 @@ const styles = StyleSheet.create({
     marginTop: 50,
     fontSize: 16,
     color: '#999',
+  },
+  listContent: {
+    paddingBottom: 140,
   },
 });

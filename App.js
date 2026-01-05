@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { initDatabase } from './src/database/database';
+import { ensureUserScopedSchemaAndBackfill } from './src/services/expenseService';
 import { onAuthStateChange } from './src/services/authService';
 
 import AuthNavigator from './src/navigation/AuthNavigator';
@@ -20,8 +21,11 @@ export default function App() {
     initDatabase();
 
     // Listen for auth state changes
-    const unsubscribe = onAuthStateChange((user) => {
+    const unsubscribe = onAuthStateChange(async (user) => {
       setUser(user);
+      if (user) {
+        await ensureUserScopedSchemaAndBackfill(user.uid);
+      }
       setLoading(false);
     });
 
