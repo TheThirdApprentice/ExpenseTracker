@@ -6,10 +6,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { backupToCloud, restoreFromCloud, getLastBackupInfo } from '../services/backupService';
+import { getCurrentUser, logoutUser } from '../services/authService';
 
 export default function SettingsScreen() {
   const [lastBackup, setLastBackup] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -20,6 +22,15 @@ export default function SettingsScreen() {
   const loadBackupInfo = async () => {
     const info = await getLastBackupInfo();
     setLastBackup(info);
+    const u = getCurrentUser();
+    if (u) {
+      setUserInfo({
+        name: u.displayName || null,
+        email: u.email || null,
+      });
+    } else {
+      setUserInfo(null);
+    }
   };
 
   const handleBackup = async () => {
@@ -78,6 +89,27 @@ export default function SettingsScreen() {
     );
   };
 
+  const handleLogout = async () => {
+    Alert.alert(
+      'Logout',
+      'Do you want to logout and switch account?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await logoutUser();
+            } catch (e) {
+              Alert.alert('Logout Failed', e.message || 'Please try again');
+            }
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -85,6 +117,20 @@ export default function SettingsScreen() {
       </View>
 
       <View style={styles.content}>
+        {userInfo && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Account</Text>
+            <Text style={styles.infoValue}>
+              {userInfo.name ? `${userInfo.name}` : 'Logged in'}
+            </Text>
+            {userInfo.email && (
+              <Text style={styles.infoCount}>{userInfo.email}</Text>
+            )}
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+              <Text style={styles.logoutText}>🚪 Logout</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Cloud Backup</Text>
           <Text style={styles.sectionSubtitle}>
@@ -238,6 +284,20 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: '#4CAF50',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  logoutButton: {
+    marginTop: 12,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#f44336',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  logoutText: {
+    color: '#f44336',
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -8,6 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import MonthlyChart from '../components/MonthlyChart';
 import StatsCard from '../components/StatsCard';
 import { getAllExpenses } from '../services/expenseService';
+import { getCurrentUser } from '../services/authService';
 import {
   getMonthlyChartData,
   getCurrentMonthExpenses,
@@ -21,6 +22,7 @@ import {
 export default function DashboardScreen() {
   const [expenses, setExpenses] = useState([]);
   const [hasShownAlert, setHasShownAlert] = useState(false);
+  const [userName, setUserName] = useState('');
 
   // Reload expenses when screen comes into focus
   useFocusEffect(
@@ -33,6 +35,15 @@ export default function DashboardScreen() {
     const allExpenses = await getAllExpenses();
     setExpenses(allExpenses);
   };
+
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (user) {
+      setUserName(user.displayName || user.email || 'User');
+    } else {
+      setUserName('');
+    }
+  }, []);
 
   // Calculate stats
   const chartData = getMonthlyChartData(expenses);
@@ -59,6 +70,9 @@ export default function DashboardScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text style={styles.title}>💰 Dashboard</Text>
+          {userName ? (
+            <Text style={styles.user}>Welcome, {userName}</Text>
+          ) : null}
           <Text style={styles.subtitle}>{getMonthName(month)}</Text>
         </View>
 
@@ -120,6 +134,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     marginTop: 5,
+  },
+  user: {
+    fontSize: 18,
+    color: '#333',
+    fontWeight: '600',
+    marginTop: 6,
   },
   statsGrid: {
     padding: 20,

@@ -88,6 +88,10 @@ export const onAuthStateChange = (callback) => {
  */
 const getAuthErrorMessage = (errorCode) => {
   switch (errorCode) {
+    case 'auth/configuration-not-found':
+      return 'Firebase Auth non configuré pour ce projet. Activez Authentication et le fournisseur Email/Mot de passe dans la console Firebase.';
+    case 'auth/operation-not-allowed':
+      return "La méthode d'authentification demandée n'est pas activée. Activez Email/Mot de passe dans Firebase > Authentication > Méthode de connexion.";
     case 'auth/email-already-in-use':
       return 'This email is already registered';
     case 'auth/invalid-email':
