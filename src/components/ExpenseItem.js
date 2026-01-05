@@ -1,7 +1,3 @@
-// src/components/ExpenseItem.js
-// Display component for single expense
-// Author: ibtyssam
-
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 

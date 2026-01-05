@@ -1,7 +1,3 @@
-// src/components/ExpenseInput.js
-// Form component for adding expenses
-// Author: thethirdapprentice
-
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 

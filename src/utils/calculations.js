@@ -1,7 +1,3 @@
-// src/utils/calculations.js
-// Utility functions for expense calculations and statistics
-// Author: thethirdapprentice
-
 /**
  * Get current month and year
  */

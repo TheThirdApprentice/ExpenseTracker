@@ -1,7 +1,3 @@
-// src/components/MonthlyChart.js
-// Bar chart showing monthly expenses
-// Author: thethirdapprentice
-
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 

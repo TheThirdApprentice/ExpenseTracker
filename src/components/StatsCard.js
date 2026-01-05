@@ -1,7 +1,3 @@
-// src/components/StatsCard.js
-// Reusable card for displaying statistics
-// Author: ibtyssam
-
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
