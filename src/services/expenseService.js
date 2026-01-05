@@ -1,7 +1,3 @@
-// src/services/expenseService.js
-// SQLite CRUD operations for expenses (scoped per user)
-// Author: thethirdapprentice
-
 import db from '../database/database';
 import { getCurrentUser } from './authService';
 
