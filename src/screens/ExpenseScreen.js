@@ -1,7 +1,3 @@
-// src/screens/ExpenseScreen.js
-// Main screen for managing expenses
-// Author: thethirdapprentice
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

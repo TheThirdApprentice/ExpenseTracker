@@ -1,7 +1,3 @@
-// src/navigation/AuthNavigator.js
-// Authentication navigation (Login/Register)
-// Author: thethirdapprentice
-
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/LoginScreen';

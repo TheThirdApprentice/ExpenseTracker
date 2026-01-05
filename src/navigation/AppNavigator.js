@@ -1,7 +1,3 @@
-// src/navigation/AppNavigator.js
-// Bottom tab navigation (main app)
-// Author: ibtyssam
-
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, Platform } from 'react-native';

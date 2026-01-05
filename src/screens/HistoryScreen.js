@@ -1,7 +1,3 @@
-// src/screens/HistoryScreen.js
-// History screen with auto-refresh when focused
-// Author: thethirdapprentice (fixed)
-
 import React, { useState } from 'react';
 import { View, Text, SectionList, StyleSheet, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

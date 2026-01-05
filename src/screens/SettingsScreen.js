@@ -1,7 +1,3 @@
-// src/screens/SettingsScreen.js
-// Settings screen with cloud backup controls
-// Author: thethirdapprentice
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
